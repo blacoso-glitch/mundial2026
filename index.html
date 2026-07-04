@@ -348,7 +348,6 @@ main{max-width:1000px;margin:0 auto;padding:24px 16px 80px;}
 <div class="tabs">
   <button class="tab-btn active" data-tab="board" onclick="showTab('board')">🏆 Tabla</button>
   <button class="tab-btn" data-tab="register" onclick="showTab('register')">✏️ Apostar</button>
-  <button class="tab-btn" data-tab="results" onclick="showTab('results')">⚽ Resultados</button>
   <button class="tab-btn" data-tab="admin" onclick="showTab('admin')">🔒 Admin</button>
 </div>
 
@@ -380,12 +379,7 @@ main{max-width:1000px;margin:0 auto;padding:24px 16px 80px;}
     </div>
   </section>
 
-  <!-- RESULTS -->
-  <section class="panel" id="panel-results">
-    <h2 style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--gold);margin-bottom:16px;">Resultados Reales</h2>
-    <p style="color:var(--muted);font-size:13px;margin-bottom:20px;">Ingresa el marcador real de cada partido al terminar los 90 minutos.</p>
-    <div id="results-list"></div>
-  </section>
+
 
   <!-- ADMIN -->
   <section class="panel" id="panel-admin">
@@ -761,7 +755,12 @@ async function renderAdminPanel(){
   const players = window._players||[];
   const el = document.getElementById('admin-content');
   el.innerHTML = `<div class="admin-section">
-    <h3>Jugadores registrados (${players.length})</h3>
+    <h3>⚽ Resultados Reales</h3>
+    <p style="color:var(--muted);font-size:13px;margin-bottom:14px;">Ingresa el marcador real al terminar los 90 minutos.</p>
+    <div id="results-list"></div>
+  </div>
+  <div class="admin-section">
+    <h3>👥 Jugadores registrados (${players.length})</h3>
     ${players.length===0?'<div class="empty">Sin jugadores aún</div>':
       players.map(p=>`
         <div class="player-admin-row">
@@ -772,6 +771,7 @@ async function renderAdminPanel(){
         </div>`).join('')}
   </div>
   <button class="btn btn-ghost btn-sm" onclick="isAdmin=false;renderAdminLock();">Cerrar sesión</button>`;
+  renderResultsList();
 }
 
 function calcTotal(p){
@@ -816,7 +816,8 @@ window.showTab = function(tab){
     b.classList.toggle('active', b.dataset.tab===tab);
   });
   if(tab==='admin' && !isAdmin) renderAdminLock();
-  if(tab==='results') renderResultsList();
+  if(tab==='admin' && isAdmin) { renderAdminPanel(); renderResultsList(); }
+
   if(tab==='board') currentDetailSlug=null;
 }
 
